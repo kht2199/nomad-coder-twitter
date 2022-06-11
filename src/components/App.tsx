@@ -1,16 +1,23 @@
 import React, {useState} from 'react';
-import Router from "components/Router";
+import ContentRouter from "components/ContentRouter";
 import fa from 'fa';
+import {Layout} from "antd";
 
+const {Header, Sider, Content, Footer} = Layout;
 
 function App() {
     const [user, setUser] = useState(fa.auth.currentUser);
 
     return (
-        <>
-            <Router user={user}/>
-            <footer>&copy;NWitter {new Date().getFullYear()}</footer>
-        </>
+        <Layout>
+            <Header>
+                <span style={{color: 'white'}}>header</span>
+            </Header>
+            <Content style={{padding: '50px 50px'}}>
+                <ContentRouter user={user}/>
+            </Content>
+            <Footer>&copy;NWitter {new Date().getFullYear()}</Footer>
+        </Layout>
     );
 }
 

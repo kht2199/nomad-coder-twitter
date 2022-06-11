@@ -4,7 +4,7 @@ import Profile from "../routes/Profile";
 import Auth from "../routes/Auth";
 import {User} from "@firebase/auth";
 
-const Router = (props: {user: User | null}) => {
+const ContentRouter = (props: {user: User | null}) => {
     const {user} = props;
     return (
         <HashRouter>
@@ -25,4 +25,4 @@ const Router = (props: {user: User | null}) => {
     )
 }
 
-export default Router;
+export default ContentRouter;
