@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Router from "./Router";
+import Router from "components/Router";
 import Auth from 'firebase/auth';
 import firebase from '../firebase';
 
