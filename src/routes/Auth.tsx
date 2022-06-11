@@ -16,10 +16,16 @@ const Auth = () => {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
         >
-            <Form.Item label={'Email'} name={'email'} required>
+            <Form.Item
+                label={'Email'} name={'email'}
+                rules={[{ required: true }]}
+            >
                 <Input type={'email'} placeholder={'Email'} />
             </Form.Item>
-            <Form.Item label={'Password'} name={'password'} required>
+            <Form.Item
+                label={'Password'} name={'password'}
+                rules={[{ required: true }]}
+            >
                 <Input.Password placeholder={'Password'} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8}}>
