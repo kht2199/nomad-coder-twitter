@@ -1,9 +1,11 @@
 import {Button, Checkbox, Col, Form, Input, notification, Row} from "antd";
 import {authentication} from 'fa';
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
 import {useState} from "react";
-import { FirebaseError } from '@firebase/util';
-import {AuthErrorCodes} from "firebase/auth";
+import {FirebaseError} from '@firebase/util';
+import firebase from "firebase/compat";
+import {GoogleAuthProvider} from "@firebase/auth";
+
 
 const buttonProps = {
     style: {
@@ -20,21 +22,16 @@ const Auth = () => {
             const res = newAccount
                 ? await createUserWithEmailAndPassword(authentication, email, password)
                 : await signInWithEmailAndPassword(authentication, email, password)
-                console.log(res);
             console.log(res);
         } catch (err) {
             const isFirebaseError = err instanceof FirebaseError;
             if (!isFirebaseError) {
                 return;
             }
-            switch (err.code) {
-                case AuthErrorCodes.USER_DELETED:
-                    notification['error']({
-                        message: 'User cannot Found.',
-                        description: 'create new account.',
-                    });
-                    break;
-            }
+            notification['error']({
+                message: err.name,
+                description: err.message,
+            });
         }
     }
     const [newAccount, setNewAccount] = useState(false);
@@ -84,7 +81,7 @@ const Auth = () => {
                 <Checkbox>Remember me</Checkbox>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8}}>
-                <Button>Continue with Google</Button>
+                <Button onClick={() => signInWithPopup(authentication, new GoogleAuthProvider())}>Continue with Google</Button>
             </Form.Item>
         </Form>
     </>)

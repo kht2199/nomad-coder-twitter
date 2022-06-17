@@ -3,6 +3,7 @@ import ContentRouter from "components/ContentRouter";
 import {authentication} from 'fa';
 import {Button, Layout} from "antd";
 import {User} from "@firebase/auth";
+import Navigation from "./Navigation";
 
 const {Header, Content, Footer} = Layout;
 
@@ -17,10 +18,8 @@ function App() {
     return (
         <Layout>
             <Header>
-                <span style={{color: 'white'}}>header</span>
-                <Button onClick={() => authentication.signOut()}>
-                    {user ? 'Log out' : 'Login'}
-                </Button>
+                {user && <Navigation />}
+                {user &&  <Button onClick={() => authentication.signOut()}>Login</Button>}
             </Header>
             <Content style={{padding: '50px 50px'}}>
                 <ContentRouter user={user}/>
