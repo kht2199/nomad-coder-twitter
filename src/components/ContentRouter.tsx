@@ -12,8 +12,8 @@ const ContentRouter = (props: {user: User | null}) => {
             <Routes>
             {user ?
                 <>
-                    <Route path={'/'} element={<Home />} />
-                    <Route path={'/home'} element={<Home />} />
+                    <Route path={'/'} element={<Home user={user} />} />
+                    <Route path={'/home'} element={<Home user={user} />} />
                     <Route path={'/profile'} element={<Profile />} />
                 </>
                 :

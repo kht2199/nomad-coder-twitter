@@ -1,38 +1,39 @@
 import {Button, Form, Input} from "antd";
-import {libs, db} from "../fa";
-import {useEffect, useState} from "react";
+import {libs, db, app} from "../fa";
+import {useEffect, useMemo, useState} from "react";
+import {User} from "@firebase/auth";
+import Tweets from "../components/Tweets";
 
-interface Tweet {
+export interface Tweet {
+    id?: string;
     text: string;
     created?: number;
+    creatorId?: string;
 }
 
-const Home = () => {
+const Home = (props: {user: User}) => {
+    const {user} = props;
     const [form] = Form.useForm();
     const [tweets, setTweets] = useState([] as Tweet[]);
+    const tweetsCollection = useMemo(() => libs.firestore.collection(db, 'tweets'), []);
     const onFinish = async () => {
         const values = await form.validateFields() as Tweet;
-        const collection = libs.firestore.collection(db, 'tweets');
-        await libs.firestore.addDoc(collection, {
+        await libs.firestore.addDoc(tweetsCollection, {
             ...values,
             created: Date.now(),
+            creatorId: user.uid,
         });
-        updateTweets();
     }
-    const updateTweets = () => {
-        const collection = libs.firestore.collection(db, 'tweets');
-        libs.firestore.getDocs(collection)
-            .then(tweets => tweets.docs.map(d => d.data() as Tweet))
-            .then(t => setTweets(t));
-    }
-    useEffect(() => updateTweets(), [])
-    console.log(tweets);
+    const onDeleteTweet = async (id: string) => {
+        const tweetsDocRef = libs.firestore.doc(db, `tweets`, id);
+        await libs.firestore.deleteDoc(tweetsDocRef);
+    };
+    useEffect(() => libs.firestore.onSnapshot(tweetsCollection, snapshot => {
+        console.log('snapshot changed', snapshot);
+        setTweets(snapshot.docs.map(d => ({...d.data(), id: d.id})) as any)
+    }), [])
     return <>
-        {tweets.map((t, idx) => (
-            <div key={idx}>
-                <span>{t.text} {t.created && new Date(t.created).toLocaleString()}</span>
-            </div>
-        ))}
+        <Tweets tweets={tweets} user={user} onDelete={onDeleteTweet}/>
         <Form form={form} onFinish={onFinish}>
             <Form.Item name={'text'}>
                 <Input />

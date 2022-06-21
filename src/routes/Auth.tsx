@@ -19,10 +19,9 @@ const Auth = () => {
         const values = await form.validateFields();
         const {email, password} = values;
         try {
-            const res = newAccount
+            newAccount
                 ? await createUserWithEmailAndPassword(authentication, email, password)
                 : await signInWithEmailAndPassword(authentication, email, password)
-            console.log(res);
         } catch (err) {
             const isFirebaseError = err instanceof FirebaseError;
             if (!isFirebaseError) {
